@@ -5,463 +5,276 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Scanner - TB</title>
     <script src="https://raw.githack.com/mebjas/html5-qrcode/master/minified/html5-qrcode.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background: #f8f9fa;
-            color: #2c3e50;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 2rem;
-            margin: 0;
-            color: #2c3e50;
-            font-weight: 500;
-        }
-        .header p {
-            font-size: 1rem;
-            color: #6c757d;
-            margin: 10px 0 0;
-        }
-        .scanner-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .camera-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            background: white;
-            color: #2c3e50;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-        .camera-select:focus {
-            outline: none;
-            border-color: #90a4ae;
-            box-shadow: 0 0 0 3px rgba(144,164,174,0.1);
-        }
-        .camera-select option {
-            background: white;
-            color: #2c3e50;
-        }
-        .scan-button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: #37474f;
-            color: white;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-        }
-        .scan-button:hover {
-            background: #455a64;
-            transform: translateY(-1px);
-        }
-        .scan-button:active {
-            transform: translateY(0);
-        }
-        .scanner-container {
-            width: 100%;
-            max-width: 640px;
-            height: auto;
-            aspect-ratio: 4 / 3;
-            margin: 20px auto;
-            display: none;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-        .scanner-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 2px solid rgba(55,71,79,0.1);
-            border-radius: 16px;
-            pointer-events: none;
-        }
-        .ticket-details {
-            display: none;
-            position: fixed;
-            bottom: -100%;
-            left: 0;
-            right: 0;
-            width: 100%;
-            background: white;
-            padding: 20px;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-        }
-        .ticket-details.show {
-            bottom: 0;
-            transform: translateY(0);
-        }
-        .ticket-details-content {
-            max-width: 500px;
-            margin: 0 auto;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        .ticket-details h3 {
-            color: #2c3e50;
-            margin: 0 0 20px;
-            text-align: center;
-            font-size: 1.25rem;
-            font-weight: 600;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #edf2f7;
-        }
-        .ticket-details p {
-            margin: 12px auto;
-            color: #2c3e50;
-            font-size: 0.95rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f7fafc;
-        }
-        .ticket-details p:last-of-type {
-            border-bottom: none;
-            margin-bottom: 20px;
-        }
-        .ticket-details p strong {
-            color: #2d3748;
-            font-weight: 500;
-            flex: 1;
-        }
-        .ticket-details p span {
-            color: #4a5568;
-            text-align: right;
-            flex: 2;
-        }
-        .continue-button {
-            width: 100%;
-            max-width: 500px;
-            margin: 16px auto 0;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: #37474f;
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-        .continue-button:hover {
-            background: #455a64;
-            transform: translateY(-1px);
-        }
-        .continue-button:active {
-            transform: translateY(0);
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: -400px;
-            background: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            max-width: 350px;
-        }
-        .notification.show {
-            right: 20px;
-        }
-        .notification.success {
-            border-left: 4px solid #37474f;
-        }
-        .notification.error {
-            border-left: 4px solid #e74c3c;
-        }
-        .notification-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .notification-icon {
-            font-size: 1.25rem;
-        }
-        .notification.success .notification-icon {
-            color: #37474f;
-        }
-        .notification.error .notification-icon {
-            color: #e74c3c;
-        }
-        .notification-text {
-            flex: 1;
-        }
-        .notification-title {
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: #2c3e50;
-        }
-        .notification-message {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            .scanner-container {
-                aspect-ratio: 3 / 4;
-            }
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>QR Code Scanner</h1>
-            <p>Scan your ticket QR code to verify</p>
-        </div>
+<body class="bg-gray-50 text-gray-800 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-medium text-gray-800">QR Code Scanner</h1>
+            <p class="text-gray-600 mt-2">Scan your ticket's QR code to check in</p>
+        </header>
 
-        <div class="scanner-card">
-            <div class="menu">
-                <select id="cameraSelect" class="camera-select">
-                    <option value="">Select Camera</option>
+        <div class="bg-white rounded-2xl p-6 shadow-lg">
+            <div class="space-y-4 mb-6">
+                <select id="cameraSelect" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-all">
+                    <option value="">Loading cameras...</option>
                 </select>
-                <button id="scanButton" class="scan-button">
-                    <i class="fas fa-qrcode"></i>
-                    Start Scanning
+
+                <button id="scanButton" class="w-full py-3.5 px-4 bg-gray-800 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-gray-700 transform hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                    <i class="fas fa-camera"></i>
+                    <span>Start Scanning</span>
                 </button>
             </div>
-            <div id="reader" class="scanner-container"></div>
-        </div>
-    </div>
 
-    <div class="ticket-details">
-        <div class="ticket-details-content">
-            <h3>Ticket Details</h3>
-            <div id="ticketInfo"></div>
-            <button class="continue-button" onclick="continueScanning()">
-                <i class="fas fa-redo"></i>
-                Continue Scanning
-            </button>
+            <div id="reader" class="w-full max-w-2xl mx-auto aspect-[4/3] hidden rounded-2xl overflow-hidden shadow-md relative">
+                <!-- Scanner will be inserted here -->
+            </div>
         </div>
-    </div>
 
-    <div class="notification">
-        <div class="notification-content">
-            <i class="notification-icon fas"></i>
-            <div class="notification-text">
-                <div class="notification-title"></div>
-                <div class="notification-message"></div>
+        <div id="ticketDetails" class="fixed bottom-0 left-0 right-0 w-full bg-white rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.06)] transform translate-y-full transition-transform duration-300 ease-in-out z-50">
+            <div class="max-w-lg mx-auto p-6">
+                <h3 class="text-xl font-semibold text-gray-800 text-center mb-6 pb-4 border-b border-gray-100"></h3>
+                <div class="space-y-4">
+                    <!-- Ticket details will be inserted here -->
+                </div>
+                <button id="continueButton" class="w-full mt-6 py-3.5 px-4 bg-gray-800 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-gray-700 transform hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                    <i class="fas fa-check"></i>
+                    <span>Continue Scanning</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="notification" class="fixed top-5 right-5 transform translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="bg-white rounded-lg shadow-lg p-4 flex items-center gap-3 min-w-[300px]">
+                <i class="notification-icon text-2xl"></i>
+                <div class="flex-1">
+                    <h4 class="font-medium text-gray-800 mb-1 notification-title"></h4>
+                    <p class="text-sm text-gray-600 notification-message"></p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         let html5QrcodeScanner = null;
+        let isScanning = false;
         let audioContext = null;
         let audioBuffer = null;
 
-        // Create audio context on user interaction
-        document.addEventListener('click', initAudio, { once: true });
-
-        function initAudio() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            // Create and load the beep sound
-            fetch('/audio/beep.mp3')
-                .then(response => response.arrayBuffer())
-                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-                .then(decodedBuffer => {
-                    audioBuffer = decodedBuffer;
-                })
-                .catch(error => console.error('Error loading audio:', error));
+        // Initialize audio context
+        async function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const response = await fetch('data:audio/mpeg;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+                const arrayBuffer = await response.arrayBuffer();
+                audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            } catch (error) {
+                console.error('Error initializing audio:', error);
+            }
         }
 
+        // Play beep sound
         function playBeep() {
             if (audioContext && audioBuffer) {
                 const source = audioContext.createBufferSource();
                 source.buffer = audioBuffer;
                 source.connect(audioContext.destination);
-                source.start();
+                source.start(0);
             }
         }
 
+        // Show notification
         function showNotification(type, title, message) {
-            const notification = document.querySelector('.notification');
-            const iconElement = notification.querySelector('.notification-icon');
-            const titleElement = notification.querySelector('.notification-title');
-            const messageElement = notification.querySelector('.notification-message');
+            const notification = document.getElementById('notification');
+            const notificationIcon = notification.querySelector('.notification-icon');
+            const notificationTitle = notification.querySelector('.notification-title');
+            const notificationMessage = notification.querySelector('.notification-message');
 
-            notification.className = 'notification ' + type;
-            iconElement.className = 'notification-icon fas ' + 
-                (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
-            titleElement.textContent = title;
-            messageElement.textContent = message;
+            // Set icon and colors based on type
+            if (type === 'success') {
+                notificationIcon.className = 'fas fa-check-circle text-green-500 notification-icon';
+                notification.querySelector('div').classList.add('border-l-4', 'border-green-500');
+            } else if (type === 'error') {
+                notificationIcon.className = 'fas fa-exclamation-circle text-red-500 notification-icon';
+                notification.querySelector('div').classList.add('border-l-4', 'border-red-500');
+            }
 
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 3000);
-        }
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
 
-        function showTicketDetails(data) {
-            const details = document.querySelector('.ticket-details');
-            const infoContainer = document.getElementById('ticketInfo');
+            // Show notification
+            notification.classList.remove('translate-x-full');
             
-            // Clear previous content
-            infoContainer.innerHTML = '';
-            
-            // Add ticket information
-            const ticketInfo = [
-                { label: 'NIS', value: data.nis },
-                { label: 'Name', value: data.nama_siswa },
-                { label: 'Class', value: data.kelas },
-                { label: 'Status', value: data.status }
-            ];
-            
-            ticketInfo.forEach(info => {
-                const p = document.createElement('p');
-                p.innerHTML = `<strong>${info.label}:</strong> <span>${info.value}</span>`;
-                infoContainer.appendChild(p);
-            });
-            
-            // Show the details panel
-            details.style.display = 'block';
-            details.offsetHeight; // Force reflow
-            details.classList.add('show');
-        }
-
-        function continueScanning() {
-            const details = document.querySelector('.ticket-details');
-            details.classList.remove('show');
+            // Hide after 3 seconds
             setTimeout(() => {
-                details.style.display = 'none';
-                if (html5QrcodeScanner) {
-                    html5QrcodeScanner.resume();
-                }
-            }, 300);
+                notification.classList.add('translate-x-full');
+            }, 3000);
         }
 
+        // Show ticket details
+        function showTicketDetails(ticket) {
+            const ticketDetails = document.getElementById('ticketDetails');
+            const content = ticketDetails.querySelector('.space-y-4');
+            const title = ticketDetails.querySelector('h3');
+
+            // Set title based on status
+            title.textContent = 'Check-In Berhasil';
+
+            // Create ticket information HTML
+            const ticketInfo = `
+                <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                    <strong class="text-gray-700">NIS</strong>
+                    <span class="text-gray-600">${ticket.nis}</span>
+                </div>
+                <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                    <strong class="text-gray-700">Nama</strong>
+                    <span class="text-gray-600">${ticket.nama_siswa}</span>
+                </div>
+                <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                    <strong class="text-gray-700">Kelas</strong>
+                    <span class="text-gray-600">${ticket.kelas}</span>
+                </div>
+                <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                    <strong class="text-gray-700">Email</strong>
+                    <span class="text-gray-600">${ticket.email}</span>
+                </div>
+                <div class="flex justify-between items-center py-3">
+                    <strong class="text-gray-700">No. HP</strong>
+                    <span class="text-gray-600">${ticket.no_hp}</span>
+                </div>
+            `;
+
+            content.innerHTML = ticketInfo;
+            ticketDetails.classList.remove('translate-y-full');
+        }
+
+        // Handle scan result
+        function onScanSuccess(decodedText) {
+            if (!isScanning) return;
+            
+            isScanning = false;
+            playBeep();
+
+            // Send the scanned data to the server
+            fetch('/scan/validate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ qr: decodedText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.valid) {
+                    showNotification('success', 'Success', data.message);
+                    showTicketDetails(data.ticket);
+                } else {
+                    let errorMessage = 'Invalid QR Code';
+                    if (data.message === 'ticket_not_found') {
+                        errorMessage = 'Tiket tidak ditemukan';
+                    } else if (data.message === 'ticket_pending') {
+                        errorMessage = 'Pembayaran tiket belum diverifikasi';
+                    } else if (data.message === 'ticket_already_used') {
+                        errorMessage = 'Tiket sudah digunakan';
+                    }
+                    showNotification('error', 'Error', errorMessage);
+                    isScanning = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('error', 'Error', 'Terjadi kesalahan saat memvalidasi tiket');
+                isScanning = true;
+            });
+        }
+
+        // Initialize scanner
+        function initializeScanner() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 4/3,
+                experimentalFeatures: {
+                    useBarCodeDetectorIfSupported: true
+                }
+            };
+
+            html5QrcodeScanner = new Html5Qrcode("reader");
+            const cameraId = document.getElementById('cameraSelect').value;
+
+            html5QrcodeScanner.start(
+                cameraId, 
+                config,
+                onScanSuccess,
+                () => {}
+            )
+            .then(() => {
+                document.getElementById('reader').style.display = 'block';
+                isScanning = true;
+                document.getElementById('scanButton').innerHTML = '<i class="fas fa-stop"></i><span>Stop Scanning</span>';
+                document.getElementById('scanButton').classList.remove('bg-gray-800', 'hover:bg-gray-700');
+                document.getElementById('scanButton').classList.add('bg-red-600', 'hover:bg-red-700');
+            })
+            .catch(err => {
+                console.error('Error starting scanner:', err);
+                showNotification('error', 'Error', 'Failed to start scanner');
+            });
+        }
+
+        // Stop scanner
+        function stopScanner() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.stop()
+                .then(() => {
+                    document.getElementById('reader').style.display = 'none';
+                    isScanning = false;
+                    document.getElementById('scanButton').innerHTML = '<i class="fas fa-camera"></i><span>Start Scanning</span>';
+                    document.getElementById('scanButton').classList.remove('bg-red-600', 'hover:bg-red-700');
+                    document.getElementById('scanButton').classList.add('bg-gray-800', 'hover:bg-gray-700');
+                });
+            }
+        }
+
+        // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            const cameraSelect = document.getElementById('cameraSelect');
-            const scanButton = document.getElementById('scanButton');
-            const reader = document.getElementById('reader');
+            // Initialize audio
+            initAudio();
 
             // Get available cameras
-            Html5Qrcode.getCameras().then(devices => {
+            Html5Qrcode.getCameras()
+            .then(devices => {
                 if (devices && devices.length) {
-                    devices.forEach(device => {
-                        const option = document.createElement('option');
-                        option.value = device.id;
-                        option.text = device.label || `Camera ${cameraSelect.options.length + 1}`;
-                        cameraSelect.add(option);
-                    });
+                    const cameraSelect = document.getElementById('cameraSelect');
+                    cameraSelect.innerHTML = devices.map(device =>
+                        `<option value="${device.id}">${device.label}</option>`
+                    ).join('');
                 }
-            }).catch(err => {
-                console.error('Error getting cameras', err);
+            })
+            .catch(err => {
+                console.error('Error getting cameras:', err);
+                showNotification('error', 'Error', 'Failed to get cameras');
             });
 
-            scanButton.addEventListener('click', function() {
-                const selectedCamera = cameraSelect.value;
-                if (!selectedCamera) {
-                    showNotification('error', 'Error', 'Please select a camera first');
-                    return;
+            // Handle scan button click
+            document.getElementById('scanButton').addEventListener('click', function() {
+                if (isScanning) {
+                    stopScanner();
+                } else {
+                    initializeScanner();
                 }
+            });
 
-                if (html5QrcodeScanner) {
-                    if (reader.style.display === 'none') {
-                        reader.style.display = 'block';
-                        html5QrcodeScanner.resume();
-                        scanButton.innerHTML = '<i class="fas fa-stop"></i> Stop Scanning';
-                    } else {
-                        reader.style.display = 'none';
-                        html5QrcodeScanner.pause();
-                        scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Start Scanning';
-                    }
-                    return;
-                }
-
-                reader.style.display = 'block';
-                scanButton.innerHTML = '<i class="fas fa-stop"></i> Stop Scanning';
-
-                html5QrcodeScanner = new Html5Qrcode("reader");
-                html5QrcodeScanner.start(
-                    selectedCamera,
-                    {
-                        fps: 10,
-                        qrbox: { width: document.getElementById('reader').offsetWidth, height: document.getElementById('reader').offsetWidth }
-                    },
-                    (decodedText) => {
-                        playBeep();
-                        html5QrcodeScanner.pause();
-                        
-                        // Validate the scanned QR code
-                        fetch('/scan/validate', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            },
-                            body: JSON.stringify({ qr_code: decodedText })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                showNotification('success', 'Success', 'Ticket validated successfully');
-                                showTicketDetails(data.ticket);
-                            } else {
-                                showNotification('error', 'Error', data.message || 'Invalid ticket');
-                                html5QrcodeScanner.resume();
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showNotification('error', 'Error', 'Failed to validate ticket');
-                            html5QrcodeScanner.resume();
-                        });
-                    },
-                    (error) => {
-                        // console.error('QR Code scanning error:', error);
-                    }
-                ).catch((err) => {
-                    console.error('Failed to start scanner:', err);
-                    showNotification('error', 'Error', 'Failed to start scanner');
-                    reader.style.display = 'none';
-                    scanButton.innerHTML = '<i class="fas fa-qrcode"></i> Start Scanning';
-                });
+            // Handle continue button click
+            document.getElementById('continueButton').addEventListener('click', function() {
+                document.getElementById('ticketDetails').classList.add('translate-y-full');
+                isScanning = true;
             });
         });
     </script>
