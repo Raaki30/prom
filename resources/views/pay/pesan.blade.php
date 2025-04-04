@@ -6,212 +6,26 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesan Tiket</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
-
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
 </head>
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #1a5f7a 0%, #2c3e50 100%);
-        min-height: 100vh;
-    }
 
-    .form-container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    .input-field {
-        border: 2px solid #e2e8f0;
-        transition: all 0.3s ease;
-    }
-
-    .input-field:focus {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    }
-
-    .loading-spinner {
-        display: none;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .whatsapp-section {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(5px);
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 1;
-    }
-
-    .whatsapp-section:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    
-
-    @keyframes popup {
-        0% {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-    #default-modal {
-        justify-content: center;
-        align-items: center;
-        animation: popup 0.1s ease-in-out;
-    }
-
-    @media (max-width: 640px) {
-        .form-container {
-            margin: 1rem;
-            padding: 1.5rem;
-        }
-
-        .input-group {
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            width: 100%;
-        }
-    }
-
-    .search-result-item {
-        padding: 0.75rem 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border-bottom: 1px solid #e5e7eb;
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-    
-    .search-result-item:last-child {
-        border-bottom: none;
-    }
-    
-    .search-result-item:hover {
-        background-color: #f8fafc;
-    }
-    
-    .search-result-item.selected {
-        background-color: #e5e7eb;
-    }
-    
-    .search-result-item .nis {
-        color: #3b82f6;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-    
-    .search-result-item .nama {
-        color: #111827;
-        font-weight: 600;
-        font-size: 0.95rem;
-    }
-    
-    .search-result-item .kelas {
-        color: #6b7280;
-        font-size: 0.875rem;
-        font-weight: 400;
-    }
-
-    #searchResults {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        margin-top: 0.5rem;
-        max-height: 300px;
-        overflow-y: auto;
-        position: absolute;
-        width: 100%;
-        z-index: 9999;
-    }
-
-    #searchResults::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    #searchResults::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-
-    #searchResults::-webkit-scrollbar-thumb {
-        background: #c5c5c5;
-        border-radius: 4px;
-    }
-
-    #searchResults::-webkit-scrollbar-thumb:hover {
-        background: #a0a0a0;
-    }
-
-    .search-result-empty {
-        padding: 1rem;
-        text-align: center;
-        color: #6b7280;
-        font-size: 0.875rem;
-    }
-
-    .input-with-icon {
-        position: relative;
-    }
-
-    .input-with-icon input {
-        padding-left: 2.5rem;
-    }
-
-    .input-with-icon i {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #9ca3af;
-    }
-</style>
-
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
-
-    <!-- Header with Logo -->
-    <header class="flex flex-col items-center mb-8">
-        
-    </header>
-
+<body class="min-h-screen font-sans bg-gradient-to-br from-[#1a5f7a] to-[#2c3e50] flex flex-col items-center justify-center p-4">
     <div class="w-full max-w-2xl mx-auto relative">
-        <div class="form-container p-6 sm:p-8 mb-6 sm:mb-8 relative">
+        <div class="bg-white/95 backdrop-blur-lg rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
             <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Pesan Tiket</h2>
             
             <form id="nisForm" class="space-y-4 sm:space-y-6">
@@ -219,22 +33,22 @@
                 <div class="relative">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cari Nomor Induk Siswa (NIS) / Nama Siswa</label>
                     <div class="relative">
-                        <div class="input-with-icon">
-                            <i class="fas fa-search"></i>
+                        <div class="relative">
+                            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             <input type="text" id="nis" name="nis" 
-                                   class="input-field w-full rounded-lg px-4 py-2.5 focus:outline-none" 
+                                   class="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-100 focus:outline-none transition-all" 
                                    placeholder="Cari berdasarkan NIS atau nama siswa..." 
                                    autocomplete="off"
                                    required>
                         </div>
-                        <div id="searchResults" class="hidden">
+                        <div id="searchResults" class="hidden absolute w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-[300px] overflow-y-auto z-50">
                             <!-- Search results will be populated here -->
                         </div>
                     </div>
                 </div>
 
-                <div id="siswaInfo" class="hidden">
-                    <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+                <div id="siswaInfo" class="hidden transform transition-all duration-200">
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-4">
                         <div class="flex items-center gap-3">
                             <i class="fas fa-user-circle text-green-500 text-xl"></i>
                             <div>
@@ -245,27 +59,16 @@
                     </div>
                 </div>
 
-               
-
                 <button type="submit" 
                         id="submitButton"
-                        class="btn-primary w-full text-white py-2.5 sm:py-3 rounded-lg font-medium flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+                        class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:translate-y-[-1px] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none transition-all duration-200"
                         disabled>
                     <span>Lanjutkan ke Pembayaran</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </form>
         </div>
-
-        <!-- <div class="whatsapp-section p-4 sm:p-6 text-center">
-            <h3 class="text-white text-base sm:text-lg font-medium mb-2 sm:mb-3">Butuh Bantuan?</h3>
-            <a href="https://wa.me/6281234567890" target="_blank" 
-               class="inline-flex items-center gap-2 bg-green-500 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
-                <i class="fab fa-whatsapp text-lg sm:text-xl"></i>
-                <span class="text-sm sm:text-base">Hubungi Kami di WhatsApp</span>
-            </a>
-        </div>
-    </div> -->
+    </div>
 
     <!-- Hidden Form for Payment -->
     <form class="hidden" action="/payment/init" method="POST" id="paymentForm">
@@ -278,8 +81,6 @@
     </form>
 
     <script>
-        
-
         async function validateNis(nis) {
             try {
                 const response = await fetch(`/validate-nis/${nis}`);
@@ -287,24 +88,18 @@
                 
                 const submitButton = document.getElementById('submitButton');
                 const siswaInfo = document.getElementById('siswaInfo');
-               
                 
                 if (data.valid) {
                     siswaInfo.classList.remove('hidden');
-                    siswaInfo.classList.add('show');
                     document.getElementById('siswaNama').textContent = `Nama: ${data.siswa.nama_siswa}`;
                     document.getElementById('siswaKelas').textContent = `Kelas: ${data.siswa.kelas}`;
                     
                     // Enable submit button
-                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
                     submitButton.disabled = false;
                     
                 } else {
                     siswaInfo.classList.add('hidden');
-                    siswaInfo.classList.remove('show');
-                    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
                     submitButton.disabled = true;
-                    
                     
                     Swal.fire({
                         icon: 'error',
@@ -339,19 +134,19 @@
                 
                 if (data.length === 0) {
                     resultsContainer.innerHTML = `
-                        <div class="search-result-empty">
+                        <div class="p-4 text-center text-gray-500">
                             <i class="fas fa-search text-gray-400 mb-2 text-lg"></i>
-                            <p>Tidak ada hasil yang ditemukan</p>
+                            <p class="text-sm">Tidak ada hasil yang ditemukan</p>
                         </div>
                     `;
                 } else {
                     data.forEach(siswa => {
                         const div = document.createElement('div');
-                        div.className = 'search-result-item';
+                        div.className = 'p-3 cursor-pointer hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors';
                         div.innerHTML = `
-                            <div class="nis">${siswa.nis}</div>
-                            <div class="nama">${siswa.nama_siswa}</div>
-                            <div class="kelas">${siswa.kelas}</div>
+                            <div class="text-blue-500 text-sm font-medium">${siswa.nis}</div>
+                            <div class="text-gray-900 font-semibold text-[0.95rem]">${siswa.nama_siswa}</div>
+                            <div class="text-gray-500 text-sm">${siswa.kelas}</div>
                         `;
                         div.addEventListener('click', () => {
                             document.getElementById('nis').value = siswa.nis;
@@ -368,8 +163,6 @@
             }
         }
 
-        
-
         // Add input event listener for search
         document.getElementById('nis').addEventListener('input', function(e) {
             const query = e.target.value;
@@ -381,9 +174,7 @@
             const submitButton = document.getElementById('submitButton');
             const siswaInfo = document.getElementById('siswaInfo');
             
-            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
             submitButton.disabled = true;
-            siswaInfo.classList.remove('show');
             siswaInfo.classList.add('hidden');
         });
 
@@ -400,7 +191,7 @@
         document.getElementById('nisForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            if (!document.getElementById('siswaInfo').classList.contains('show')) {
+            if (document.getElementById('siswaInfo').classList.contains('hidden')) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Data Belum Valid',
