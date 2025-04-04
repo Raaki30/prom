@@ -16,11 +16,7 @@ class Payment
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->is('payment/init') && $request->hasValidSignature()) {
-            return $next($request);
-        }
-        
-        if (!Session::has('payment_data')) {
+        if (!$request->has('_token') || !csrf_token() || $request->input('_token') !== csrf_token()) {
             return redirect('/pesan');
         }
 
