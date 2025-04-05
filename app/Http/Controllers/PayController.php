@@ -94,7 +94,7 @@ class PayController extends Controller
         
         // Store the file and get the full path
         $path = Storage::putFileAs('public/bukti', $bukti, $filename);
-        
+
         // Get the full URL for the file
         $fileUrl = Storage::url($path);
 
@@ -164,4 +164,23 @@ class PayController extends Controller
             ], 500);
         }
     }
+
+    public function show($id, Request $request)
+    {
+        $nis = $request->query('nis');
+
+        $tiket = Tiket::where('order_id', $id)->where('nis', $nis)->first();
+
+        if (!$tiket) {
+            return abort(404, 'Tiket tidak ditemukan.');
+        }
+
+        if ($tiket->status === 'pending') {
+            return abort(404, 'Tiket belum dibayar.');
+        }
+
+        // Tetap tampilkan tiket meskipun sudah digunakan
+        return view('eticket.show', compact('tiket'));
+    }
+
 }

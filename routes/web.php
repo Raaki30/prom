@@ -28,6 +28,7 @@ Route::middleware('payment')->group(function () {
     
 });
 
+Route::get('/eticket/{id}', [PayController::class, 'show'])->name('eticket.show');
 
 Route::get('/scan', function () {
     return view('scan');

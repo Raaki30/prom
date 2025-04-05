@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,48 +21,54 @@
                     </div>
 
                     <div class="mb-8">
-                        <h5 class="text-lg font-medium mb-4">Silahkan ikuti langkah-langkah berikut:</h5>
+                        <h5 class="text-lg font-medium mb-4">Silakan ikuti langkah-langkah berikut:</h5>
                         <ol class="list-decimal pl-5 space-y-4">
-                            <li>Transfer ke nomor rekening dibawah ini</li>
-                            
-                            @if($tiket->metodebayar === 'bca')
-                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                                <h6 class="font-medium mb-2">Bank BCA Virtual Account:</h6>
-                                <p class="mb-1">Bank: BCA</p>
-                                <p class="mb-1">Nomor Rekening: 1234567890</p>
-                                <p class="mb-4">Atas Nama: Your Company Name</p>
-                                <div>
-                                    <h6 class="font-medium mb-2">How to pay via BCA Virtual Account:</h6>
-                                    <ol class="list-decimal pl-5 space-y-1">
-                                        <li>Login to your BCA Mobile Banking</li>
-                                        <li>Select "Transfer"</li>
-                                        <li>Choose "BCA Virtual Account"</li>
-                                        <li>Enter the Virtual Account number</li>
-                                        <li>Confirm the amount and complete the transfer</li>
-                                    </ol>
-                                </div>
-                            </div>
-                            @elseif($tiket->metodebayar === 'mandiri')
-                            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
-                                <h6 class="font-medium mb-2">Bank Mandiri Virtual Account:</h6>
-                                <p class="mb-1">Bank: Mandiri</p>
-                                <p class="mb-1">Nomor Rekening: 0987654321</p>
-                                <p class="mb-4">Atas Nama: Your Company Name</p>
-                                <div>
-                                    <h6 class="font-medium mb-2">How to pay via Mandiri Virtual Account:</h6>
-                                    <ol class="list-decimal pl-5 space-y-1">
-                                        <li>Login to your Mandiri Mobile Banking</li>
-                                        <li>Select "Transfer"</li>
-                                        <li>Choose "Virtual Account"</li>
-                                        <li>Enter the Virtual Account number</li>
-                                        <li>Confirm the amount and complete the transfer</li>
-                                    </ol>
-                                </div>
-                            </div>
-                            @endif
+                            <li>Transfer ke nomor rekening di bawah ini:</li>
 
-                            <li>Simpan bukti pembayaran anda</li>
-                            <li>Upload bukti pembayaran ke form dibawah</li>
+                            <li>
+                                @if($tiket->metodebayar === 'bca')
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 transition hover:shadow-md">
+                                        <h6 class="font-medium mb-2">Bank BCA Virtual Account:</h6>
+                                        <p class="mb-1">Bank: BCA</p>
+                                        <p class="mb-1">Nomor Rekening: 1234567890</p>
+                                        <p class="mb-4">Atas Nama: Your Company Name</p>
+                                        <div>
+                                            <h6 class="font-medium mb-2">Cara Pembayaran via BCA VA:</h6>
+                                            <ol class="list-decimal pl-5 space-y-1">
+                                                <li>Buka aplikasi BCA Mobile.</li>
+                                                <li>Pilih menu "Transfer".</li>
+                                                <li>Pilih "BCA Virtual Account".</li>
+                                                <li>Masukkan nomor VA di atas.</li>
+                                                <li>Konfirmasi dan selesaikan pembayaran.</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                @elseif($tiket->metodebayar === 'mandiri')
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 transition hover:shadow-md">
+                                        <h6 class="font-medium mb-2">Bank Mandiri Virtual Account:</h6>
+                                        <p class="mb-1">Bank: Mandiri</p>
+                                        <p class="mb-1">Nomor Rekening: 0987654321</p>
+                                        <p class="mb-4">Atas Nama: Your Company Name</p>
+                                        <div>
+                                            <h6 class="font-medium mb-2">Cara Pembayaran via Mandiri VA:</h6>
+                                            <ol class="list-decimal pl-5 space-y-1">
+                                                <li>Buka aplikasi Livin' by Mandiri.</li>
+                                                <li>Pilih menu "Transfer".</li>
+                                                <li>Pilih "Virtual Account".</li>
+                                                <li>Masukkan nomor VA di atas.</li>
+                                                <li>Konfirmasi dan selesaikan pembayaran.</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="text-red-600 font-semibold">
+                                        Metode pembayaran tidak dikenali. Silakan hubungi admin.
+                                    </div>
+                                @endif
+                            </li>
+
+                            <li>Simpan bukti pembayaran Anda.</li>
+                            <li>Upload bukti pembayaran melalui form di bawah ini.</li>
                         </ol>
                     </div>
 
@@ -75,12 +81,12 @@
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
                                    id="bukti" 
                                    name="bukti" 
-                                   accept="image/*" 
+                                   accept="image/*"
                                    required>
-                            <p class="mt-1 text-sm text-gray-500">Format yang diterima: JPG, JPEG, PNG (Max 2MB)</p>
+                            <p class="mt-1 text-sm text-gray-500">Format: JPG, JPEG, PNG. Max: 2MB</p>
                         </div>
                         <button type="submit" 
-                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
                             Upload Bukti
                         </button>
                     </form>
@@ -89,7 +95,7 @@
                         <h3 class="text-gray-700 text-lg mb-3">Butuh Bantuan?</h3>
                         <a href="https://wa.me/6281234567890" 
                            target="_blank"
-                           class="inline-flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+                           class="inline-flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
                             <i class="fab fa-whatsapp"></i>
                             <span>Hubungi Kami di WhatsApp</span>
                         </a>
@@ -99,4 +105,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>

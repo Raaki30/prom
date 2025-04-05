@@ -1,68 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesan Tiket</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
                     },
+                    colors: {
+                        primary: '#1D4ED8',
+                        accent: '#0EA5E9',
+                        bg: '#F9FAFB'
+                    }
                 },
             },
         }
     </script>
 </head>
+<body class="bg-bg font-sans min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-xl">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 sm:p-10">
+            <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">
+                🎟️ Pesan Tiket Sekarang
+            </h1>
 
-<body class="min-h-screen font-sans bg-gradient-to-br from-[#1a5f7a] to-[#2c3e50] flex flex-col items-center justify-center p-4">
-    <div class="w-full max-w-2xl mx-auto relative">
-        <div class="bg-white/95 backdrop-blur-lg rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Pesan Tiket</h2>
-            
-            <form id="nisForm" class="space-y-4 sm:space-y-6">
+            <form id="nisForm" class="space-y-6">
                 @csrf
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Cari Nomor Induk Siswa (NIS) / Nama Siswa</label>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Induk Siswa (NIS) / Nama</label>
                     <div class="relative">
-                        <div class="relative">
-                            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="text" id="nis" name="nis" 
-                                   class="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-100 focus:outline-none transition-all" 
-                                   placeholder="Cari berdasarkan NIS atau nama siswa..." 
-                                   autocomplete="off"
-                                   required>
-                        </div>
-                        <div id="searchResults" class="hidden absolute w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-[300px] overflow-y-auto z-50">
-                            <!-- Search results will be populated here -->
-                        </div>
+                        <input type="text" id="nis" name="nis"
+                            placeholder="Contoh: 220134 atau Andi Saputra"
+                            class="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none transition-all"
+                            autocomplete="off" required />
+                        <i class="fas fa-search absolute top-1/2 right-4 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <div id="searchResults"
+                        class="hidden absolute w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto z-50">
+                        <!-- Results injected by JS -->
                     </div>
                 </div>
 
-                <div id="siswaInfo" class="hidden transform transition-all duration-200">
-                    <div class="bg-green-50 border border-green-200 rounded-xl p-4">
-                        <div class="flex items-center gap-3">
-                            <i class="fas fa-user-circle text-green-500 text-xl"></i>
-                            <div>
-                                <p class="text-sm font-medium text-green-800" id="siswaNama"></p>
-                                <p class="text-sm text-green-700" id="siswaKelas"></p>
-                            </div>
-                        </div>
+                <div id="siswaInfo" class="hidden bg-gray-50 border border-gray-200 rounded-xl p-4 flex items-center gap-4 transition-all">
+                    <i class="fas fa-user text-blue-500 text-xl"></i>
+                    <div>
+                        <p class="text-base font-semibold text-gray-800" id="siswaNama"></p>
+                        <p class="text-sm text-gray-600" id="siswaKelas"></p>
                     </div>
                 </div>
 
-                <button type="submit" 
-                        id="submitButton"
-                        class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:translate-y-[-1px] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none transition-all duration-200"
-                        disabled>
+                <button
+                    type="submit"
+                    id="submitButton"
+                    class="w-full bg-primary text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all disabled:opacity-50"
+                    disabled>
                     <span>Lanjutkan ke Pembayaran</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
@@ -79,7 +82,6 @@
         <input type="hidden" name="bawa_tamu" value="0">
         <input type="hidden" name="harga" id="hargaInput">
     </form>
-
     <script>
         async function validateNis(nis) {
             try {
