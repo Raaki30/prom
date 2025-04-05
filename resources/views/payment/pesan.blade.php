@@ -83,7 +83,7 @@
     <script>
         async function validateNis(nis) {
             try {
-                const response = await fetch(`/validate-nis/${nis}`);
+                const response = await fetch(`/api/validate-nis/${nis}`);
                 const data = await response.json();
                 
                 const submitButton = document.getElementById('submitButton');
@@ -126,7 +126,7 @@
             }
 
             try {
-                const response = await fetch(`/search-siswa?query=${encodeURIComponent(query)}`);
+                const response = await fetch(`/api/search-siswa?query=${encodeURIComponent(query)}`);
                 const data = await response.json();
                 
                 const resultsContainer = document.getElementById('searchResults');

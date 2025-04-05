@@ -9,15 +9,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Public Routes
+
 Route::get('/pesan', function () {
-    return view('pay.pesan');
+    return view('payment.pesan');
 })->name('pesan');
 
-Route::get('/validate-nis/{nis}', [PayController::class, 'validateNis'])->name('validate.nis');
-Route::get('/search-siswa', [SiswaController::class, 'search'])->name('siswa.search');
-
-// Payment Routes with middleware
 Route::middleware('payment')->group(function () {
     Route::prefix('payment')->name('payment.')->group(function () {
         Route::post('/init', [PayController::class, 'initPayment'])->name('init');
@@ -32,9 +28,9 @@ Route::middleware('payment')->group(function () {
     
 });
 
-// Scanner Routes
+
 Route::get('/scan', function () {
     return view('scan');
 })->name('scan');
 
-Route::post('/scan/validate', [PayController::class, 'validateScan'])->name('scan.validate');
+

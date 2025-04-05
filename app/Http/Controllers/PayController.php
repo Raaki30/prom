@@ -41,7 +41,7 @@ class PayController extends Controller
 
         // Store the initial data in session
         Session::put('payment_data', $request->all());
-        return view('pay.payment', $request->all());
+        return view('payment.payment', $request->all());
     }
 
     
@@ -93,7 +93,7 @@ class PayController extends Controller
         $filename = 'bukti_' . $request->order_id . '_' . time() . '.' . $extension;
         
         // Store the file and get the full path
-        $path = $bukti->storeAs('public/bukti', $filename);
+        $path = Storage::putFileAs('public/bukti', $bukti, $filename);
         
         // Get the full URL for the file
         $fileUrl = Storage::url($path);

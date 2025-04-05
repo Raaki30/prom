@@ -188,7 +188,7 @@
             playBeep();
 
             // Send the scanned data to the server
-            fetch('/scan/validate', {
+            fetch('/api/scan/validate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
