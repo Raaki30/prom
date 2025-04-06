@@ -179,7 +179,7 @@ class PayController extends Controller
             return abort(404, 'Tiket belum dibayar.');
         }
 
-        // Tetap tampilkan tiket meskipun sudah digunakan
+        
         return view('eticket.show', compact('tiket'));
     }
 

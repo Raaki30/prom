@@ -1,74 +1,64 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Ticket - {{ $tiket->nama }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hi, {{ $tiket->nama }}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Montserrat', sans-serif; }
+    .script-font { font-family: 'Dancing Script', cursive; }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-lg w-full border-t-8 border-blue-600 relative">
+<body class="bg-gradient-to-br from-indigo-900 to-purple-800 text-white min-h-screen flex items-center justify-center p-6">
 
-        {{-- Judul --}}
-        <h1 class="text-3xl font-extrabold text-blue-600 text-center mb-6">E-Ticket</h1>
+  <div class="bg-white text-gray-800 rounded-3xl shadow-2xl overflow-hidden max-w-3xl w-full">
+    
 
-        {{-- QR Code atau status --}}
+    <div class="p-8 space-y-6">
+
+      <div class="text-center">
+        <p class="text-lg text-gray-700">Dear, {{ $tiket->nama }}</p>
+        <h1 class="script-font text-4xl text-purple-800 font-bold">You're Invited</h1>
+        <h2 class="text-2xl mt-2">Enchanted Evening: Prom Night 2025</h2>
+        <p class="mt-2 text-gray-600">A magical night to remember, under the stars ✨</p>
+      </div>
+
+      
+   
+
+      <div class="bg-purple-100 p-6 rounded-lg text-center">
+        <h3 class="text-lg font-semibold text-purple-800 mb-4">Your Entry Ticket</h3>
         @if($tiket->entry !== 'yes')
-            <div class="flex justify-center mb-6">
-                <div class="bg-white p-4 border border-gray-300 rounded-xl shadow">
-                    <img 
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $tiket->order_id }}" 
-                        alt="QR Code"
-                        class="w-36 h-36"
-                    >
-                    <p class="text-center text-xs mt-2 text-gray-500">Scan untuk check-in</p>
-                </div>
-            </div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ $tiket->order_id }}" alt="QR Code" class="mx-auto w-40 h-40">
+          <p class="text-sm text-purple-800 mt-2">Show this QR code at the entrance</p>
         @else
-            <div class="text-center mb-6">
-                <span class="inline-block px-4 py-2 bg-red-100 text-red-600 text-sm font-semibold rounded-full">
-                    Tiket Sudah Digunakan
-                </span>
+          <div class="relative inline-block">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=000000" class="w-40 h-40 blur-sm">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-red-600 font-bold bg-white px-2 py-1 rounded">Used</span>
             </div>
+          </div>
         @endif
+      </div>
 
-        {{-- Informasi Tiket --}}
-        <div class="space-y-3 text-sm">
-            <div class="flex justify-between border-b pb-2">
-                <span class="font-medium text-gray-700">Order ID</span>
-                <span class="text-gray-600">{{ $tiket->order_id }}</span>
-            </div>
-            <div class="flex justify-between border-b pb-2">
-                <span class="font-medium text-gray-700">Nama</span>
-                <span class="text-gray-600">{{ $tiket->nama }}</span>
-            </div>
-            <div class="flex justify-between border-b pb-2">
-                <span class="font-medium text-gray-700">NIS</span>
-                <span class="text-gray-600">{{ $tiket->nis }}</span>
-            </div>
-            <div class="flex justify-between border-b pb-2">
-                <span class="font-medium text-gray-700">Kelas</span>
-                <span class="text-gray-600">{{ $tiket->kelas }}</span>
-            </div>
-            <div class="flex justify-between border-b pb-2">
-                <span class="font-medium text-gray-700">Email</span>
-                <span class="text-gray-600">{{ $tiket->email }}</span>
-            </div>
-            <div class="flex justify-between border-b pb-2">
-                <span class="font-medium text-gray-700">No. HP</span>
-                <span class="text-gray-600">{{ $tiket->phone }}</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="font-medium text-gray-700">Status</span>
-                <span class="capitalize text-gray-600">{{ $tiket->status }}</span>
-            </div>
+      <div class="bg-purple-50 p-6 rounded-lg text-sm">
+        <h3 class="text-center text-lg font-semibold text-purple-800 mb-3">Your Info</h3>
+        <div class="grid grid-cols-2 gap-2">
+          <p><strong>Name:</strong> {{ $tiket->nama }}</p>
+          <p><strong>ID:</strong> {{ $tiket->nis }}</p>
+          <p><strong>Class:</strong> {{ $tiket->kelas }}</p>
+          <p><strong>Ticket ID:</strong> {{ $tiket->order_id }}</p>
         </div>
+      </div>
 
-        {{-- Footer --}}
-        <div class="mt-8 text-center text-xs text-gray-400">
-            Tunjukkan halaman ini saat check-in
-        </div>
+      <div class="text-center text-sm text-gray-600 mt-6">
+        <p>✨ Let’s make this night magical together ✨</p>
+        <p class="mt-2">Questions? Whatsapp us at <a href="https://wa.me/6281234567890" class="underline text-purple-800">+6281234567890</a></p>
+      </div>
 
     </div>
+  </div>
 </body>
 </html>

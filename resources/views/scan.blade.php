@@ -40,10 +40,7 @@
     let isScanning = false;
     let html5QrCode;
 
-    function playBeep() {
-      const beep = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-      beep.play();
-    }
+    
 
     function showNotification(type, title, message) {
       const notification = document.getElementById('notification');
@@ -114,7 +111,7 @@
     function onScanSuccess(decodedText) {
       if (!isScanning) return;
       isScanning = false;
-      playBeep();
+      
 
       fetch('/api/scan/validate', {
         method: 'POST',

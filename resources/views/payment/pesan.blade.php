@@ -42,14 +42,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Induk Siswa (NIS) / Nama</label>
                     <div class="relative">
                         <input type="text" id="nis" name="nis"
-                            placeholder="Contoh: 220134 atau Andi Saputra"
+                            placeholder="Contoh: 222310085 atau Raya Nadira"
                             class="w-full px-5 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 outline-none transition-all"
                             autocomplete="off" required />
                         <i class="fas fa-search absolute top-1/2 right-4 -translate-y-1/2 text-gray-400"></i>
-                    </div>
-                    <div id="searchResults"
-                        class="hidden absolute w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto z-50">
-                        <!-- Results injected by JS -->
+                        
+                        <!-- Changed from absolute to relative positioning and improved width constraints -->
+                        <div id="searchResults"
+                            class="hidden relative w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto z-50">
+                        </div>
                     </div>
                 </div>
 
@@ -111,7 +112,6 @@
                     });
                 }
             } catch (error) {
-                console.error('Error validating NIS:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
