@@ -7,8 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8">
+<body class="bg-gray-100 flex flex-col min-h-screen">
+<div class="mt-4">
+        <x-header :step="3" />
+    </div>
+    <div class="flex-grow container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto">
             <div class="bg-white rounded-lg shadow-lg">
                 <div class="p-6">
@@ -91,18 +94,12 @@
                         </button>
                     </form>
 
-                    <div class="text-center">
-                        <h3 class="text-gray-700 text-lg mb-3">Butuh Bantuan?</h3>
-                        <a href="https://wa.me/6281234567890" 
-                           target="_blank"
-                           class="inline-flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">
-                            <i class="fab fa-whatsapp"></i>
-                            <span>Hubungi Kami di WhatsApp</span>
-                        </a>
-                    </div>
+                    
                 </div>
             </div>
         </div>
     </div>
+    @include('components.footer')
+    @include('components.whatsapp')
 </body>
 </html>

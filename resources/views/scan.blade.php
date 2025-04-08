@@ -179,5 +179,6 @@
       document.getElementById('closeDetails').addEventListener('click', hideTicketDetails);
     });
   </script>
+@include('components.footer')
 </body>
 </html>
