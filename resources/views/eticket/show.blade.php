@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hi, {{ $tiket->nama }}</title>
+  <title>Hi, {{ explode(' ', trim($tiket->nama))[0] }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -19,7 +19,7 @@
     <div class="p-8 space-y-6">
 
       <div class="text-center">
-        <p class="text-lg text-gray-700">Dear, {{ $tiket->nama }}</p>
+        <p class="text-lg text-gray-700">Dear, {{ explode(' ', trim($tiket->nama))[0] }}</p>
         <h1 class="script-font text-4xl text-purple-800 font-bold">You're Invited</h1>
         <h2 class="text-2xl mt-2">Enchanted Evening: Prom Night 2025</h2>
         <p class="mt-2 text-gray-600">A magical night to remember, under the stars ✨</p>

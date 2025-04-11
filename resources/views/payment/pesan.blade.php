@@ -39,7 +39,7 @@
         <div class="w-full max-w-xl">
             <div class="bg-white rounded-2xl shadow-2xl p-8 sm:p-10">
                 <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">
-                    🎟️ Pesan Tiket Sekarang
+                    Pesan Tiket Sekarang
                 </h1>
 
                 <form id="nisForm" class="space-y-6">
@@ -74,7 +74,7 @@
                         id="submitButton"
                         class="w-full bg-primary text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all disabled:opacity-50"
                         disabled>
-                        <span>Lanjutkan ke Pembayaran</span>
+                        <span>Lanjutkan ke Pemesanan</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </form>

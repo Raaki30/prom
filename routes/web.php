@@ -14,6 +14,10 @@ Route::get('/pesan', function () {
     return view('payment.pesan');
 })->name('pesan');
 
+Route::get('/payment/afterpay', function () {
+    return view('payment.success');
+})->name('success');
+
 Route::middleware('payment')->group(function () {
     Route::prefix('payment')->name('payment.')->group(function () {
         Route::post('/init', [PayController::class, 'initPayment'])->name('init');

@@ -18,7 +18,9 @@
                 <p class="text-gray-600 mb-6">
                     Terima kasih telah melakukan pembayaran. Kami akan memverifikasi pembayaran Anda dalam waktu maksimal <strong>2x24 jam</strong>, dan detail tiket akan dikirim ke email Anda.
                 </p>
-                <p class="text-gray-500 mb-6">Order ID: <span class="font-mono">{{ $tiket->order_id }}</span></p>
+                <p class="text-gray-600 mb-6">
+                    ID Pesanan Anda: <strong>{{ request()->query('order_id') }}</strong>
+                </p>
                 <div class="flex justify-center">
                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                 </div>
