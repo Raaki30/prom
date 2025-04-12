@@ -32,7 +32,7 @@ Model `Tiket` menyimpan informasi berikut:
 
 ## 🛠️ Teknologi yang Digunakan
 
-- Laravel 10
+- Laravel 12
 - Laravel Breeze (auth scaffolding)
 - Tailwind CSS untuk styling
 - HTML5 QR Code Reader (planned integration untuk scan tiket)
