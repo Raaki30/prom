@@ -1,66 +1,60 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Prom Night Ticketing Website
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Website ini dibuat untuk mempermudah proses pemesanan tiket acara prom night sekolah. Dibangun menggunakan Laravel, sistem ini mendukung pengelolaan data pemesan, validasi bukti pembayaran, dan tampilan dashboard untuk panitia prom.
 
-## About Laravel
+## 📌 Deskripsi Project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Prom adalah aplikasi berbasis web yang memungkinkan siswa memesan tiket acara prom dengan mengisi data seperti NIS, nama, email, kelas, jumlah tiket, dan metode pembayaran. Setelah pemesanan, pengguna dapat mengunggah bukti pembayaran yang nantinya akan divalidasi oleh admin atau panitia.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistem ini dilengkapi dengan autentikasi, upload bukti via API (imgbb), dan halaman admin untuk melihat semua data pemesan secara real time. Admin juga dapat mengubah status validasi setiap pemesanan.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🧩 Fitur Utama
 
-## Learning Laravel
+- Formulir pemesanan tiket dengan validasi data
+- Upload bukti pembayaran berbasis API
+- Preview gambar bukti secara langsung sebelum upload
+- Panel admin untuk melihat, memfilter, dan memvalidasi pemesanan
+- Fitur pencarian data berdasarkan NIS, nama, atau email
+- Sistem autentikasi menggunakan Laravel Breeze
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🗃️ Struktur Data Tiket
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Model `Tiket` menyimpan informasi berikut:
+- `order_id`: ID unik untuk tiap pemesanan
+- `nis`: Nomor Induk Siswa
+- `nama`, `email`, `phone`, `kelas`: Identitas pemesan
+- `jumlah_tiket`: Jumlah tiket yang dibeli
+- `harga`: Total harga berdasarkan jumlah tiket
+- `metodebayar`: Metode pembayaran (contoh: transfer bank)
+- `bukti`: URL gambar bukti pembayaran
+- `status`: Status validasi pembayaran (pending, success, rejected)
+- `entry`: Timestamp saat pembelian dilakukan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Teknologi yang Digunakan
 
-## Laravel Sponsors
+- Laravel 10
+- Laravel Breeze (auth scaffolding)
+- Tailwind CSS untuk styling
+- HTML5 QR Code Reader (planned integration untuk scan tiket)
+- SweetAlert2 untuk notifikasi
+- imgbb API untuk upload bukti pembayaran
+- MySQL sebagai basis data
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🔒 Keamanan
 
-### Premium Partners
+- Input pengguna divalidasi melalui `Form Request`
+- SQL Injection dicegah secara default oleh Laravel (Eloquent dan Query Builder)
+- Pengunggahan file dibatasi dan divalidasi
+- Autentikasi dan middleware digunakan untuk proteksi halaman admin
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 🔎 Rencana Pengembangan Selanjutnya
 
-## Contributing
+- QR code scanner untuk validasi tiket saat event berlangsung
+- Fitur export data pemesan ke Excel
+- Statistik penjualan dan pendapatan
+- Email notifikasi setelah pemesanan berhasil
+- Halaman landing prom untuk promosi acara
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Made with ❤️ by [Raaki30](https://github.com/Raaki30)
