@@ -96,11 +96,12 @@ class PayController extends Controller
     $tiket = Tiket::where('order_id', $request->order_id)->first();
 
     try {
+        $newFileName = 'bukti_' . Str::slug($tiket->nama, '_') . '.' . $file->getClientOriginalExtension();
         $response = Http::asMultipart()
             ->attach(
-                'image',
-                fopen($file->getRealPath(), 'r'),
-                $file->getClientOriginalName()
+            'image',
+            fopen($file->getRealPath(), 'r'),
+            $newFileName
             )
             ->post('https://api.imgbb.com/1/upload?key=' . env('IMGBB_API_KEY'));
 
@@ -127,6 +128,7 @@ class PayController extends Controller
         return response()->json([
             'success' => true,
             'image_url' => $imageUrl,
+            'order_id' => $tiket->order_id,
         ]);
 
     } catch (\Exception $e) {
@@ -141,80 +143,10 @@ class PayController extends Controller
 
 
 
-    public function validateScan(Request $request)
-    {
-        try {
-            $request->validate([
-                'qr' => 'required|string|max:255'
-            ]);
+    
 
-            $tiket = Tiket::where('order_id', $request->qr)->first();
-            
-            if (!$tiket) {
-                return response()->json([
-                    'valid' => false,
-                    'message' => 'ticket_not_found'
-                ]);
-            }
+    
 
-            if ($tiket->status == 'completed' && $tiket->entry == 'no') {
-                // Update entry status to yes
-                $tiket->entry = 'yes';
-                $tiket->save();
-
-                return response()->json([
-                    'valid' => true,
-                    'message' => 'Check-In Berhasil',
-                    'ticket' => [
-                        'nis' => $tiket->nis,
-                        'nama_siswa' => $tiket->nama,
-                        'kelas' => $tiket->kelas,
-                        'status' => $tiket->status,
-                        'order_id' => $tiket->order_id,
-                        'email' => $tiket->email,
-                        'no_hp' => $tiket->phone
-                    ]
-                ]);
-            } else if ($tiket->status == 'pending') {
-                return response()->json([
-                    'valid' => false,
-                    'message' => 'ticket_pending'
-                ]);
-            } else if ($tiket->status == 'completed' && $tiket->entry == 'yes') {
-                return response()->json([
-                    'valid' => false,
-                    'message' => 'ticket_already_used'
-                ]);
-            } else {
-                return response()->json([
-                    'valid' => false,
-                    'message' => 'ticket_invalid'
-                ]);
-            }
-        } catch (\Exception $e) {
-            return response()->json([
-                'valid' => false,
-                'message' => 'Terjadi kesalahan saat memvalidasi tiket'
-            ], 500);
-        }
-    }
-
-    public function show($id, Request $request)
-    {
-        $nis = $request->query('nis');
-
-        $tiket = Tiket::where('order_id', $id)->where('nis', $nis)->first();
-
-        if (!$tiket) {
-            return abort(404, 'Tiket tidak ditemukan.');
-        }
-
-        if ($tiket->status === 'pending') {
-            return abort(404, 'Tiket belum dibayar.');
-        }
-
-        
-        return view('eticket.show', compact('tiket'));
-    }
+    
 
 }

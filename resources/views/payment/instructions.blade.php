@@ -94,6 +94,11 @@
   const confirmButton = document.getElementById('confirmButton');
   const form = document.getElementById('uploadForm');
 
+  // Ensure the confirm button is disabled initially
+  confirmButton.disabled = true;
+  confirmButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+  confirmButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+
   fileInput.addEventListener('change', function () {
     const file = fileInput.files[0];
     if (file && file.size <= 2 * 1024 * 1024) {
@@ -101,6 +106,9 @@
       reader.onload = function (e) {
         previewImage.src = e.target.result;
         previewContainer.classList.remove('hidden');
+        confirmButton.disabled = false;
+        confirmButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        confirmButton.classList.add('bg-green-600', 'hover:bg-green-700');
         filenameDisplay.textContent = file.name;
       };
       reader.readAsDataURL(file);
@@ -111,6 +119,11 @@
         text: 'Ukuran maksimum 2MB',
       });
       fileInput.value = '';
+      previewContainer.classList.add('hidden');
+      confirmButton.disabled = true;
+      confirmButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+      confirmButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+      filenameDisplay.textContent = '';
     }
   });
 
