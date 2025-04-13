@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendEmail;
 
 class TiketController extends Controller
 {
@@ -18,6 +20,21 @@ class TiketController extends Controller
         $tiket = Tiket::findOrFail($id);
         $tiket->status = 'completed';
         $tiket->save();
+
+        $data = [
+            'nis' => $tiket->nis,
+            'nama' => $tiket->nama,
+            'kelas' => $tiket->kelas,
+            'status' => $tiket->status,
+            'order_id' => $tiket->order_id,
+            'email' => $tiket->email,
+            'no_hp' => $tiket->phone,
+            'url' => url('/eticket/' . $tiket->order_id . '?nis=' . $tiket->nis),
+        ];
+
+        Mail::to($tiket->email)->send(new SendEmail($data));
+
+    
 
         return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi.');
     }
